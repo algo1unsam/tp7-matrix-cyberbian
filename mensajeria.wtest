@@ -2,7 +2,14 @@ import mensajeria.*
 import mensajeros.*
 
 
-describe "2 " {}
+describe "MENSAJERIA" {
+    test "contratar a un mensajero"{
+        mensajeria.contratarMensajero(neo)
+        assert.that(mensajeria.contratarMensajero().contains(neo))
+    }
+}
+
+
 
 
 describe "3 " {}

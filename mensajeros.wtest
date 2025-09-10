@@ -3,11 +3,16 @@ import mensajeros.*
 describe "Test de mensajeros primera parte " {
 	
 	test "Morfeo en camion con 1 acoplado pesa 90kg + 500kg "{
+		camion.cantAcoplados(1)
+		camion.peso()
+		morfeo.transporte(camion)
 	    assert.equals(590, morfeo.peso())
 }
 
 	test "Camion con 2 acoplados pesan 1000kg + 90kg"{
-		camion.acoplados(2)
+		camion.cantAcoplados(2)
+		camion.peso()
+		morfeo.transporte(camion)
 	    assert.equals(1090, morfeo.peso()) 
 }
 
@@ -22,6 +27,7 @@ describe "Test de mensajeros primera parte " {
 }
 
 	test "Morfeo anda en el Nabucodonosor"{
+		morfeo.transporte(camion)
 	    assert.equals(morfeo.transporte(), camion)
 }
 
@@ -30,7 +36,9 @@ describe "Test de mensajeros primera parte " {
     }
 
     test "el puente no deja pasar un mensajero pesado"{
-        camion.acoplados(3)
+        camion.cantAcoplados(3)
+		camion.peso()
+		morfeo.transporte(camion)
 	    assert.notThat(puente.dejarPasar(morfeo))
     }
 
