@@ -5,8 +5,68 @@ import mensajeros.*
 describe "MENSAJERIA" {
     test "contratar a un mensajero"{
         mensajeria.contratarMensajero(neo)
-        assert.that(mensajeria.contratarMensajero().contains(neo))
+        assert.that(mensajeria.mensajeros().contains(neo))
     }
+
+    test "despedir a neo y que no este en mensajeros" {
+        mensajeria.contratarMensajero(neo)
+        mensajeria.despedirMensajero(neo)
+        assert.that(mensajeria.mensajeros().contains(neo))
+    }
+
+    test "despedir efectivamente a todos :D aguante menem"{
+        mensajeria.contratarMensajero(neo)
+        mensajeria.contratarMensajero(morfeo)
+        mensajeria.despedirATodos()
+        assert.that(mensajeria.mensajeros().isEmpty())
+    }
+
+    test "la mensajeria tiene 1 mensajero"{
+        mensajeria.contratarMensajero(neo)
+        assert.notThat(mensajeria.esGrande())
+    }
+    
+    test "la mensajeria tiene 2 mensajeros"{
+        mensajeria.contratarMensajero(neo)
+        mensajeria.contratarMensajero(morfeo)
+        assert.notThat(mensajeria.esGrande())
+    }
+
+    test "la mensajeria tiene 3 mensajeros"{
+        mensajeria.contratarMensajero(neo)
+        mensajeria.contratarMensajero(morfeo)
+        mensajeria.contratarMensajero(trinity)
+        assert.that(mensajeria.esGrande())
+    }
+
+    test "puede ser entregado x trinity"{
+    mensajeria.contratarMensajero(trinity)
+    mensajeria.contratarMensajero(morfeo)
+    assert.that(mensajeria.paqueteEntregadoPrimerEmpleado())
+    }
+
+    test "NO PUEDE SER ENTREGADO POR MORFEO"{
+    mensajeria.contratarMensajero(morfeo)
+    assert.notThat(mensajeria.paqueteEntregadoPrimerEmpleado())
+    }
+
+    test "peso de trinity"{
+    mensajeria.contratarMensajero(neo)
+    mensajeria.contratarMensajero(trinity)
+    assert.equals(900, mensajeria.pesoUltimoPasajero())
+    }
+
+    
+    test "peso de neo pero no es el ultimo pasajero"{
+    mensajeria.contratarMensajero(neo)
+    mensajeria.contratarMensajero(trinity)
+    assert.notEquals(0, mensajeria.pesoUltimoPasajero())
+    }
+ 
+
+
+
+
 }
 
 
