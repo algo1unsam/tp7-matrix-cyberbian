@@ -4,26 +4,31 @@ object mensajeria {
     const property mensajeros = []
 
     method contratarMensajero(persona){
-        return
+        mensajeros.add(persona)
+        return mensajeros
     }
 
     method despedirMensajero(persona){
-        return
+        mensajeros.remove(persona)
+        return mensajeros
     }
 
     method despedirATodos(){
-        return
+        mensajeros.clear()
+        return mensajeros
     }
 
     method esGrande(){
-        return
+        return mensajeros.size() > 2
     }
 
     method paqueteEntregadoPrimerEmpleado(){
+        //que este pago y q pese menos de mil
+    
         return
     }
 
     method pesoUltimoMensajero(){
-        return
+        return mensajeros.last().peso()
     }
 }

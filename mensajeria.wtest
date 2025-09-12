@@ -11,7 +11,7 @@ describe "MENSAJERIA" {
     test "despedir a neo y que no este en mensajeros" {
         mensajeria.contratarMensajero(neo)
         mensajeria.despedirMensajero(neo)
-        assert.that(mensajeria.mensajeros().contains(neo))
+        assert.notThat(mensajeria.mensajeros().contains(neo))
     }
 
     test "despedir efectivamente a todos :D aguante menem"{
@@ -53,23 +53,20 @@ describe "MENSAJERIA" {
     test "peso de trinity"{
     mensajeria.contratarMensajero(neo)
     mensajeria.contratarMensajero(trinity)
-    assert.equals(900, mensajeria.pesoUltimoPasajero())
+    assert.equals(900, mensajeria.pesoUltimoMensajero())
     }
 
     
     test "peso de neo pero no es el ultimo pasajero"{
     mensajeria.contratarMensajero(neo)
     mensajeria.contratarMensajero(trinity)
-    assert.notEquals(0, mensajeria.pesoUltimoPasajero())
+    assert.notEquals(0, mensajeria.pesoUltimoMensajero())
     }
+
+
  
 
 
 
 
 }
-
-
-
-
-describe "3 " {}
