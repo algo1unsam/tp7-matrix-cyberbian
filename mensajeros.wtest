@@ -43,11 +43,13 @@ describe "Test de mensajeros primera parte " {
     }
 
     test "un paquete estaPago"{
-		paquete.pago(true)
+		paquete.pagar()
 	    assert.that(paquete.estaPago())
     }
 
     test "un paquete pago con destino a Alsina puede ser entregado por Morfeo en camion liviano"{
+		camion.cantAcoplados(1)
+		morfeo.transporte(camion)
 		paquete.pagar()
 		paquete.destino(puente)
 	    assert.that(paquete.puedeSerEntregadoPor(morfeo))
@@ -59,9 +61,43 @@ describe "Test de mensajeros primera parte " {
 
 	test "un paquete pago no puede entregado por Morfeo en camion de 3 acoplados"{
 		paquete.pagar()
-        camion.acoplados(3)
+        camion.cantAcoplados(3)
 	    assert.notThat(paquete.puedeSerEntregadoPor(morfeo))
     }
+
+	test "Neo con credito no puede llevar paquete que no esta pago a la Matrix"{
+		neo.cargarCredito(200)
+		paquete.destino(matrix)
+		paquete.puedeSerEntregadoPor(neo)
+		assert.notThat(paquete.puedeSerEntregadoPor(neo))
+	}
+
+	test "Morfeo puede llevar un paquete que esta pago"{
+		camion.cantAcoplados(1)
+		morfeo.transporte(camion)
+		paquete.pagar()
+		paquete.destino(puente)
+		assert.that(paquete.puedeSerEntregadoPor(morfeo))
+	}
+
+	test "paquetito puede ser entregado"{
+		assert.that(paquetito.puedeSerEntregadoPor(trinity))
+	}
+
+	test "paqueton puede ser entregado"{
+		paquetonViajero.pagar(200)
+		assert.that(paquetonViajero.puedeSerEntregadoPor(trinity))
+	}
+
+	test "paqueton no puede ser entregado por trinity por falta de pago"{
+		paquetonViajero.pagar(5)
+		assert.notThat(paquetonViajero.puedeSerEntregadoPor(trinity))
+	}
+
+	test "paqueton no puede ser entregado porque morfeo no puede pasar por matrix"{
+		paquetonViajero.pagar(200)
+		assert.notThat(paquetonViajero.puedeSerEntregadoPor(morfeo))
+	}
 }
 
 

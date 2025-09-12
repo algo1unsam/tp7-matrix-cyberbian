@@ -1,29 +1,39 @@
 object morfeo {
     var property peso = 90
     var property transporte = monopatin
-    var property llamada = false
     
     method peso(){
          return peso + transporte.peso()
     }
+
+    method tieneCredito(){
+        return false
+    }
 }
 object trinity{
-    var property llamada = true
-    var property peso = 900
+    const property peso = 900
+
+    method tieneCredito(){
+        return true
+    }
 }
 
 object neo{
-    var property llamada = true
     var property peso = 0
+    var property saldo = 0
 
-    method tieneCredito(valor){
-        if (valor <= 0){
-            llamada = false
-        }
-        else {
-            llamada = true
-        }
-        return llamada
+    method tieneCredito(){
+        return self.saldo() > 0
+    }
+
+    method cargarCredito(plata){
+        saldo += plata
+        return saldo
+    }
+
+    method hacerLlamada(){
+        saldo -= 10
+        return saldo
     }
 }
 
@@ -47,11 +57,67 @@ object puente {
 
 object matrix {
     method dejarPasar(mensajero){
-        return
+        return mensajero.tieneCredito()
     }
 }
 
 object paquete {
-    var property destino = null
-    var property pago = 0
+    var property precio = 500
+    var destino = matrix
+    var pago = false
+
+    method pagar(){
+        pago = true
+        return pago
+    }
+
+    method estaPago(){
+        return pago
+    }
+
+    method destino(lugar){
+        destino = lugar
+        return destino
+    }
+
+    method puedeSerEntregadoPor(mensajero){
+        return self.estaPago() and destino.dejarPasar(mensajero)
+    }
+}
+object paquetito {
+    var property precio = 100
+    var pago = true
+
+    method estaPago(){
+        return pago
+    }
+
+    method puedeSerEntregadoPor(mensajero){
+        return self.estaPago()
+    }
+}
+
+object paquetonViajero {
+    const destino = [matrix, puente]
+    const precioDestino = 100
+    var pago = 0
+    var property precio = 1000
+
+    method pagar(dinero){
+        pago += dinero 
+        return pago
+    }
+
+    method estaPago(){
+        return pago == destino.size()*precioDestino
+    }
+
+    method aniadirDestino(lugar){
+        destino.add(lugar)
+        return destino
+    }
+
+    method puedeSerEntregadoPor(mensajero){
+        return self.estaPago() and destino.all({lugar => lugar.dejarPasar(mensajero)})
+    }
 }
