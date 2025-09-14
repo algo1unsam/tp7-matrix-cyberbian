@@ -2,7 +2,147 @@ import mensajeria.*
 import mensajeros.*
 
 
-describe "2 " {}
+describe "Mensajeria" {
+    test "contratar a un mensajero"{
+        mensajeria.contratarMensajero(neo)
+        assert.that(mensajeria.mensajeros().contains(neo))
+    }
+
+    test "despedir a neo y que no este en mensajeros" {
+        mensajeria.contratarMensajero(neo)
+        mensajeria.despedirMensajero(neo)
+        assert.notThat(mensajeria.mensajeros().contains(neo))
+    }
+
+    test "despedir efectivamente a todos"{
+        mensajeria.contratarMensajero(neo)
+        mensajeria.contratarMensajero(morfeo)
+        mensajeria.despedirATodos()
+        assert.that(mensajeria.mensajeros().isEmpty())
+    }
+
+    test "la mensajeria tiene 1 mensajero"{
+        mensajeria.contratarMensajero(neo)
+        assert.notThat(mensajeria.esGrande())
+    }
+    
+    test "la mensajeria tiene 2 mensajeros"{
+        mensajeria.contratarMensajero(neo)
+        mensajeria.contratarMensajero(morfeo)
+        assert.notThat(mensajeria.esGrande())
+    }
+
+    test "la mensajeria tiene 3 mensajeros"{
+        mensajeria.contratarMensajero(neo)
+        mensajeria.contratarMensajero(morfeo)
+        mensajeria.contratarMensajero(trinity)
+        assert.that(mensajeria.esGrande())
+    }
+
+    test "puede ser entregado x trinity"{
+    mensajeria.contratarMensajero(trinity)
+    mensajeria.contratarMensajero(morfeo)
+    paquete.pagar()
+    assert.that(mensajeria.paqueteEntregadoPrimerEmpleado(paquete))
+    }
+
+    test "peso de trinity"{
+    mensajeria.contratarMensajero(neo)
+    mensajeria.contratarMensajero(trinity)
+    assert.equals(900, mensajeria.pesoUltimoMensajero())
+    }
+
+    
+    test "peso de neo pero no es el ultimo pasajero"{
+    mensajeria.contratarMensajero(neo)
+    mensajeria.contratarMensajero(trinity)
+    assert.notEquals(0, mensajeria.pesoUltimoMensajero())
+    }
+
+    test "trinity puede llevar paquetito"{
+        mensajeria.contratarMensajero(neo)
+        mensajeria.contratarMensajero(trinity)
+        assert.that(mensajeria.puedeSerEntregadoPorEmpresa(paquetito))
+
+    }
+
+       test "neo no puede llevar paquete porque no esta pago"{
+        mensajeria.contratarMensajero(neo)
+        mensajeria.contratarMensajero(trinity)
+        assert.notThat(mensajeria.puedeSerEntregadoPorEmpresa(paquete))
+    }
+
+    test "todos pueden llevar paquetito"{
+        mensajeria.contratarMensajero(neo)
+        mensajeria.contratarMensajero(trinity)
+        mensajeria.contratarMensajero(morfeo)
+        assert.equals([neo, trinity, morfeo], mensajeria.mensajerosQuePuedenLaburar(paquetito))
+    }
+
+    test "trinity y neo pueden llevar paqueton pero morfeo no"{
+        mensajeria.contratarMensajero(neo)
+        mensajeria.contratarMensajero(trinity)
+        mensajeria.contratarMensajero(morfeo)
+        neo.cargarCredito(500)
+        paquetonViajero.pagar(200)
+        assert.equals([neo, trinity], mensajeria.mensajerosQuePuedenLaburar(paquetonViajero))
+    }
+
+    test "la mensajeria no tiene sobrepeso porque contiene a morfeo y a neo"{
+        mensajeria.contratarMensajero(neo)
+        mensajeria.contratarMensajero(morfeo)
+        assert.notThat(mensajeria.tieneSobrepeso())
+    }
+
+    test "la mensajeria tiene sobrepeso porque contiene a trinity"{
+        mensajeria.contratarMensajero(trinity)
+        assert.that(mensajeria.tieneSobrepeso())
+    }
+
+    test "enviar 4 paquetitos y que quede pendiente un paquete"{
+        mensajeria.contratarMensajero(trinity)
+        mensajeria.enviarPaquete(paquetito)
+        mensajeria.enviarPaquete(paquetito)
+        mensajeria.enviarPaquete(paquetito)
+        mensajeria.enviarPaquete(paquetito)
+        mensajeria.enviarPaquete(paquete)
+        assert.equals(20,mensajeria.calcularGanancias())
+        assert.equals([paquete],mensajeria.paquetesPendientes())
+    }
+
+    test "enviar 4 paquetitos 1 paquete y que queden pendientes 3 paquetones viajeros"{
+        mensajeria.contratarMensajero(trinity)
+        mensajeria.enviarPaquete(paquetito)
+        mensajeria.enviarPaquete(paquetito)
+        mensajeria.enviarPaquete(paquetito)
+        mensajeria.enviarPaquete(paquetito)
+        paquete.pagar()
+        paquete.destino(puente)
+        mensajeria.enviarPaquete(paquetonViajero)
+        mensajeria.enviarPaquete(paquetonViajero)
+        mensajeria.enviarPaquete(paquetonViajero)
+        mensajeria.enviarPaquete(paquete)
+        assert.equals(70,mensajeria.calcularGanancias())
+        assert.equals([paquetonViajero, paquetonViajero, paquetonViajero],mensajeria.paquetesPendientes())
+    }
 
 
-describe "3 " {}
+//nofunciona
+    test "enviar paquete pendientes mas caro"{
+        mensajeria.contratarMensajero(trinity)
+        mensajeria.paquetesPendientes(paquete)
+        mensajeria.paquetesPendientes(paquetonViajero)
+        mensajeria.enviarPaqueteMasCaro()
+        assert.equals([paquete], mensajeria.paquetesPendientes())
+        assert.equals(100, mensajeria.calcularGanancias())
+    }
+
+    test "enviar todos los paquetes pendientes"{
+        mensajeria.contratarMensajero(trinity)
+        mensajeria.paquetesPendientes(paquete)
+        mensajeria.paquetesPendientes(paquetonViajero)
+        mensajeria.enviarTodosLosPaquetesPendientes()
+        assert.that(mensajeria.paquetesPendientes().isEmpty())
+    }
+
+}
