@@ -1,13 +1,17 @@
 import mensajeros.*
 
 object mensajeria {
-    const property mensajeros = #{}
-    var property entrega = paquete
-    const property paquetesPendientes = []
+    const property mensajeros = []
+    var property paquetesPendientes = []
     var property totalGanado = 0
 
     method contratarMensajero(persona){
-        mensajeros.add(persona)
+        if (mensajeros.contains(persona)){
+            self.error("Ya es un empleado de la mensajeria")
+        }
+        else {
+            mensajeros.add(persona)
+        }
         return mensajeros
     }
 
@@ -25,42 +29,51 @@ object mensajeria {
         return mensajeros.size() > 2
     }
 
-    method paqueteEntregadoPrimerEmpleado(){
-        return paquete.puedeSerEntregadoPor(mensajeros.first())
+    method paqueteEntregadoPrimerEmpleado(_paquete){
+        return _paquete.puedeSerEntregadoPor(mensajeros.head())
     }
 
     method pesoUltimoMensajero(){
         return mensajeros.last().peso()
     }
 
-    method puedeSerEntregadoPorEmpresa(){
-        return mensajeros.any({mensajero => entrega.puedeSerEntregadoPor(mensajero)}) //recorre lista de mensajeros para ver si alguno cumple con las condiciones del paquete a entregar, devuelve BOOOLEANO
+    method puedeSerEntregadoPorEmpresa(_paquete){
+        return mensajeros.any({mensajero => _paquete.puedeSerEntregadoPor(mensajero)})
     }
 
-    method mensajerosQuePuedenLaburar(){
-        const mensajerosCapacitados = mensajeros.filter({mensajero => entrega.puedeSerEntregadoPor(mensajero)})
-        return mensajerosCapacitados
+    method mensajerosQuePuedenLaburar(_paquete){
+        return mensajeros.filter({mensajero => _paquete.puedeSerEntregadoPor(mensajero)})
     }
 
     method tieneSobrepeso(){
         return mensajeros.average({mensajero => mensajero.peso()}) > 500
     }
-
+//de aca para abajo no funciona
     method enviarPaquete(_paquete){
-        self.mensajerosQuePuedenLaburar().findOrElse({mensajero => mensajero.mensajerosQuePuedenLaburar()},{paquetesPendientes.add(_paquete)})
-        totalGanado = totalGanado + paquete.precio()
+        if (self.mensajerosQuePuedenLaburar(_paquete).isEmpty()){
+            paquetesPendientes.add(_paquete)
+        }
+        else{
+            self.mensajerosQuePuedenLaburar(_paquete).first()
+            totalGanado = totalGanado + _paquete.precio()
+        }
     }
 
     method calcularGanancias(){
         return totalGanado
     }
 
-    method enviarPaquetesPendientes(){
+    method enviarTodosLosPaquetesPendientes(){
         totalGanado += paquetesPendientes.sum({paq => paq.precio()})
         paquetesPendientes.clear()
     }
 
     method enviarPaqueteMasCaro(){
+        self.mensajerosQuePuedenLaburar(self.encontrarPaquetePendienteMasCaro()).first()
+        totalGanado = totalGanado + self.encontrarPaquetePendienteMasCaro().precio()
+    }
 
+    method encontrarPaquetePendienteMasCaro(){
+        return paquetesPendientes.find({paq => paquetesPendientes.max()})
     }
 }

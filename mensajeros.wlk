@@ -62,7 +62,7 @@ object matrix {
 }
 
 object paquete {
-    var property precio = 500
+    var property precio = 50
     var destino = matrix
     var pago = false
 
@@ -85,7 +85,7 @@ object paquete {
     }
 }
 object paquetito {
-    var property precio = 100
+    var property precio = 5
     var pago = true
 
     method estaPago(){
@@ -101,7 +101,7 @@ object paquetonViajero {
     const destino = [matrix, puente]
     const precioDestino = 100
     var pago = 0
-    var property precio = 1000
+    var property precio = 100
 
     method pagar(dinero){
         pago += dinero 
